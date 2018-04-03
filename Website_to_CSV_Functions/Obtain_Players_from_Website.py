@@ -62,9 +62,9 @@ def get_player_information(players, td_tags, col_num, name_index, status_index,
             players[player.player_id] = player
             if not os.path.exists(filename):        
                 headers = ['Player Id', 'Name', 'Current Status', 'Years Played']
-                player.New_CSV_File(filename, headers)
+                player.new_csv_file(filename, headers)
             stats = [player.player_id, player.name, player.current_status, player.years_played]
-            player.Write_Stats_to_CSV(filename, stats)
+            player.write_stats_to_csv(filename, stats)
             player = Player()
         count += 1
 

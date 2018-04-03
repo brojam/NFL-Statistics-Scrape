@@ -1,5 +1,8 @@
-import csv, bs4, re
 from Website_to_CSV_Functions.Functions_Needed_For_All_Stats import *
+
+import csv
+import re
+import threading
 
 class Player(object):
     def __init__(self):
@@ -12,19 +15,29 @@ class Player(object):
         
     def __repr__(self):
         return "<Player: %s>" % self.name
-    
-    def New_CSV_File(self,filename,headers):
-        with open(filename,'w',newline='') as fin:
+
+    def new_csv_file(self, filename, headers):
+        lock = threading.Lock()
+        lock.acquire()
+
+        with open(filename, 'w', newline='') as fin:
             writer = csv.writer(fin)
             writer.writerow(headers)
 
-    def Write_Stats_to_CSV(self,filename,Stats):
+        lock.release()
+
+    def write_stats_to_csv(self, filename, Stats):
+        lock = threading.Lock()
+        lock.acquire()
+
         with open(filename,'a',newline='') as fin:
             writer = csv.writer(fin)
             writer.writerow(Stats)
 
+        lock.release()
+
     # row is read in from csv file    
-    def Assign_Variables_From_CSV(self,row):
+    def Assign_Variables_From_CSV(self, row):
         self.player_id = row[0]
         self.name = row[1]
         self.current_status = row[2]
@@ -40,6 +53,5 @@ class Player(object):
             
                 self.number = player_num[1] if player_num[1] != '' else None
                 self.position = player_num[2]
-            except:
-                pass
-                
+            except Exception as e:
+                print("Error getting number and position for player {}: {}".format(str(self), e))

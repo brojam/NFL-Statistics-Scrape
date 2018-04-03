@@ -58,7 +58,7 @@ class Career_Stats(Player):
 
         if not os.path.exists(File_Names[stats_type]):        
             Header = ['Player Id','Name','Position']+self.Get_Table_Header(stats_type,thead_tags)
-            self.New_CSV_File(File_Names[stats_type],Header)   
+            self.new_csv_file(File_Names[stats_type], Header)
         else:
             with open(File_Names[stats_type],newline='') as fout:
                 reader = csv.reader(fout)
@@ -90,7 +90,7 @@ class Career_Stats(Player):
                         if len(Stats) == header_length-1:
                             Stats.append(s)
                             Stats = [self.player_id,self.name,self.position]+Stats
-                            self.Write_Stats_to_CSV(filename,Stats)
+                            self.write_stats_to_csv(filename, Stats)
                             Stats = []
                         else:
                             Stats.append(s)

@@ -72,7 +72,7 @@ class Game_Logs(Player):
         if not os.path.exists(filename):        
             NFL_Headers = self.Get_Table_Header(thead_tags)
             Header = ['Player Id','Name','Position','Year','Season']+NFL_Headers
-            self.New_CSV_File(filename,Header)   
+            self.new_csv_file(filename, Header)
         else:
             with open(filename,newline='') as fout:
                 reader = csv.reader(fout)
@@ -123,5 +123,5 @@ class Game_Logs(Player):
                                     Stats.append(s)
                             if len(Stats) == header_length:
                                 Stats = [self.player_id,self.name,self.position]+Stats
-                                self.Write_Stats_to_CSV(filename,Stats)
+                                self.write_stats_to_csv(filename, Stats)
                                 Stats = [year,season]

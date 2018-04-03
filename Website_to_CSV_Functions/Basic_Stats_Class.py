@@ -3,7 +3,7 @@ from Player_Class import *
 from Website_to_CSV_Functions.Functions_Needed_For_All_Stats import *
 
 class Player_Basic_Stats(Player):
-    def __init__(self,player):
+    def __init__(self, player):
         self.player_id = player.player_id
         self.name = player.name
         self.current_status = player.current_status
@@ -20,18 +20,18 @@ class Player_Basic_Stats(Player):
         self.high_school = None
         self.high_school_location = None
         self.experience = None
-        
-    def Get_Player_Team(self,div_bio):
-        player_team_tag = div_bio.find('p',class_ = 'player-team-links')
+
+    def Get_Player_Team(self, div_bio):
+        player_team_tag = div_bio.find('p', class_='player-team-links')
         try:
             team = player_team_tag.text
             team = team.split('|')
             team = team[0].strip()
             self.current_team = team
         except:
-            pass
+            print("Error getting player team")
     
-    def Get_Height(self,s):
+    def Get_Height(self, s):
         s = re.split(':|-| ',s)
         while '' in s: s.remove('')
         if s:
@@ -39,19 +39,19 @@ class Player_Basic_Stats(Player):
             inch = int(s[1])
             self.height = 12*ft + inch
     
-    def Get_Weight(self,s):
+    def Get_Weight(self, s):
         s = re.split(':|-| ',s)
         while '' in s: s.remove('')
         if s:
             self.weight = int(s[0])
             
-    def Get_Age(self,s):
+    def Get_Age(self, s):
         s = re.split(':|-| ',s)
         while '' in s: s.remove('')
         if s:
             self.age = int(s[0])
             
-    def Get_Birth_Info(self,s):
+    def Get_Birth_Info(self, s):
         s = re.split(':|-| ',s)
         while '' in s: s.remove('')
         if s:
@@ -59,21 +59,21 @@ class Player_Basic_Stats(Player):
             if len(s) >= 2:
                 self.birth_place = ' '.join(s[1:len(s)])
     
-    def Get_College_Info(self,s):
+    def Get_College_Info(self, s):
         s = re.split(':| ',s)
         while '' in s: s.remove('')
         if s:
             s = ' '.join(s)
             self.college = s
     
-    def Get_Experience(self,s):
+    def Get_Experience(self, s):
         s = re.split(':| ',s)
         while '' in s: s.remove('')
         if s:
             s = ' '.join(s)
             self.experience = s
     
-    def Get_High_School_Info(self,s):
+    def Get_High_School_Info(self, s):
         s = re.split(' HS| \[|: |;',s)
      
         while '' in s: s.remove('')
@@ -84,26 +84,26 @@ class Player_Basic_Stats(Player):
         if len(s) > 1:
             self.high_school_location = s[1].strip('[]')
     
-    def Get_and_Store_Basic_Stats(self,filename):
+    def Get_and_Store_Basic_Stats(self, filename, callback):
         if not os.path.exists(filename):        
             Basic_Stats_Headers = ['Age','Birth Place','Birthday','College',
                'Current Status','Current Team','Experience','Height (inches)',
                'High School','High School Location','Name','Number','Player Id',
                'Position','Weight (lbs)','Years Played']
-            self.New_CSV_File(filename,Basic_Stats_Headers)        
+            self.new_csv_file(filename, Basic_Stats_Headers)
             
         profile_url = 'http://www.nfl.com/player/'+self.player_id+'/profile'
         soup = Get_HTML_Document(profile_url,{})   
     
         counter = 1
         fn_name = None
-        Player_Stats = {'Height':self.Get_Height,
-                        'Weight':self.Get_Weight,
-                        'Age':self.Get_Age,
-                        'Born':self.Get_Birth_Info,
-                        'College':self.Get_College_Info,
-                        'Experience':self.Get_Experience,
-                        'High School':self.Get_High_School_Info}
+        Player_Stats = {'Height': self.Get_Height,
+                        'Weight': self.Get_Weight,
+                        'Age': self.Get_Age,
+                        'Born': self.Get_Birth_Info,
+                        'College': self.Get_College_Info,
+                        'Experience': self.Get_Experience,
+                        'High School': self.Get_High_School_Info}
     
         counter = 1
         for div_bio in soup.find_all('div', id = 'player-bio'):
@@ -120,9 +120,6 @@ class Player_Basic_Stats(Player):
 
         attrs = vars(self)
         basic_stats = [attrs[k] for k in sorted(attrs)]
-        self.Write_Stats_to_CSV(filename,basic_stats)
-    
+        self.write_stats_to_csv(filename, basic_stats)
 
-   
-    
-    
+        callback()
